@@ -8,8 +8,10 @@ export interface userInterface extends Document {
     password: string;
     avatar: string;
     isInstructor: boolean
-    verificaionCode: number;
+    verificationCode: number;
+    isVerified: boolean
     codeExpiry: Date;
+    token: string;
     courses: ObjectId[],
 }
 
@@ -41,7 +43,7 @@ export const userSchema: Schema<userInterface> = new mongoose.Schema({
         required: true,
         default: false
     },
-    verificaionCode:{
+    verificationCode:{
         type: Number,
         required: true,
     },
@@ -54,7 +56,15 @@ export const userSchema: Schema<userInterface> = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref:"Courses"
         }
-    ]
+    ],
+    isVerified: {
+        type: Boolean,
+        required: true,
+        default: false
+    }, 
+    token:{
+        type: String,
+    }
 }, { timestamps: true })
 
 // Model creation
