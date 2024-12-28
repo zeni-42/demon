@@ -10,7 +10,7 @@ export class ResponseHelper{
             { status }
         )
     }
-    static error(message = "An error occured", status: number, error?: Error ): Response {
+    static error(message = "An error occured", status: number, error?: unknown ): Response {
         return Response.json(
             {
                 status,

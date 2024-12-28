@@ -14,13 +14,12 @@ export async function POST(req: Request){
 
         const existingUser = await User.findOne(
             { email },
-            { isVerified: true }
         )
         if (existingUser) {
             return ResponseHelper.error("This email is taken", 410)
         }
 
-        const hashedPassword= await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10)
         const verificationCode = Math.floor(Math.random() * 10000)
         const expiryTime = new Date(Date.now() + 3600000)
 
@@ -36,13 +35,13 @@ export async function POST(req: Request){
         }
 
         const createdUser = await User.findById(user._id).select(
-            "-password -token -verificationCode -codeExpiry"
+            "-password -token -verificationCode -codeExpiry -__v"
         )
 
         return ResponseHelper.success(createdUser,`User Registered`,200)
 
     } catch (error) {
         console.log(`Somthing went wrong in register route`)
-        return ResponseHelper.error("Internal server error", 500)
+        return ResponseHelper.error("Internal server error", 500, error)
     }
 }
