@@ -1,5 +1,6 @@
 import { DBconnect } from "@/lib/DBconnect"
 import { ResponseHelper } from "@/lib/responseHelper"
+import { verifyToken } from "@/lib/verifyToken";
 import { User } from "@/models/User.models";
 import bcrypt from 'bcryptjs'
 import jwt from "jsonwebtoken"
@@ -13,6 +14,16 @@ export async function POST(req: Request) {
 
     try {
         await DBconnect();
+
+        const directAccess = await verifyToken(email)
+        if (directAccess) {
+            const directUser = await User.findOne({ email }).select(
+                "-password -token -verificationCode -codeExpiry -__v"
+            )
+
+            return ResponseHelper.success(directUser, "User logged in ( Cookie )", 200)
+        }
+
         const user = await User.findOne({ email })
         if (!user) {
             return ResponseHelper.error("User not found", 404)
@@ -38,9 +49,6 @@ export async function POST(req: Request) {
                 expiresIn: process.env.TOKEN_EXPIRY
             }
         )
-        // if (!token) {
-        //     throw new Error("Failed to generate token")
-        // }
         if (!token) throw new Error("Fialed to generate token")
 
         user.token = token;
@@ -49,6 +57,14 @@ export async function POST(req: Request) {
         const loggedInUser = await User.findById(user._id).select(
             "-password -token -verificationCode -codeExpiry -__v"
         )
+
+        const cookieStore = await cookies()
+        cookieStore.set("token", token,{
+            secure: true,
+            sameSite: "strict",
+            httpOnly: true,
+            maxAge: 172800 // 2days
+        })
 
         return ResponseHelper.success(loggedInUser, 'User loggedIn', 200)
     } catch (error) {
