@@ -29,28 +29,30 @@ export async function POST(req: Request){
             throw new Error("Token is missing")
         }
 
-        const user = await User.create({
-            fullName,
-            email,
-            password: hashedPassword,
-            verificationCode,
-            codeExpiry: expiryTime,
-        })
-        if (!user) {
-            return ResponseHelper.error(`Failed to register`, 405)
-        }
-
         const token = jwt.sign(
             {
-                id: user._id,
-                password: user.password
+                fullName,
+                email,
+                hashedPassword
             },
             secret,
             {
                 expiresIn: process.env.TOKEN_EXPIRY
             }
         )
-        if (!token) throw new Error("Fialed to generate token")
+        if (!token) throw new Error("Failed to generate token")
+        
+        const user = await User.create({
+            fullName,
+            email,
+            password: hashedPassword,
+            verificationCode,
+            codeExpiry: expiryTime,
+            token
+        })
+        if (!user) {
+            return ResponseHelper.error(`Failed to register`, 405)
+        }
 
         user.token = token;
         await user.save();
