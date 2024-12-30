@@ -34,32 +34,12 @@ export async function POST(req: Request) {
             return ResponseHelper.error("Invalid password", 412)
         }
 
-        const secret = process.env.TOKEN_SECRET
-        if (!secret) {
-            throw new Error("Token is missing")
-        }
-
-        const token = jwt.sign(
-            {
-                id: user._id,
-                password: user.password
-            },
-            secret,
-            {
-                expiresIn: process.env.TOKEN_EXPIRY
-            }
-        )
-        if (!token) throw new Error("Fialed to generate token")
-
-        user.token = token;
-        await user.save();
-
         const loggedInUser = await User.findById(user._id).select(
             "-password -token -verificationCode -codeExpiry -__v"
         )
 
         const cookieStore = await cookies()
-        cookieStore.set("token", token,{
+        cookieStore.set("token", user?.token,{
             secure: true,
             sameSite: "strict",
             httpOnly: true,

@@ -64,6 +64,7 @@ export const userSchema: Schema<userInterface> = new mongoose.Schema({
     }, 
     token:{
         type: String,
+        required: true
     }
 }, { timestamps: true })
 

@@ -1,6 +1,7 @@
 import { DBconnect } from "@/lib/DBconnect"
 import { ResponseHelper } from "@/lib/responseHelper"
 import { User } from "@/models/User.models";
+import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
     const { userId } = await req.json()
@@ -22,6 +23,10 @@ export async function POST(req: Request) {
             }
         )
         await user.save();
+
+        const cookieStore = await cookies()
+        cookieStore.delete('token')
+
         return ResponseHelper.success({},`User logged out`, 200)
 
     } catch (error) {

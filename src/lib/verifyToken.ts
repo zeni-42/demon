@@ -7,8 +7,8 @@ export async function verifyToken(email: string): Promise<boolean> {
     const cookieStore = await cookies()
     const token = cookieStore.get('token')
 
-    const user = await User.findOne({ email, token })
-    if (!user) {
+    const user = await User.findOne({ email })
+    if (user?.token !== token) {
         return false
     }
     return true

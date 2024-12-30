@@ -19,6 +19,7 @@ export default function Page(){
             const res = await axios.post("/api/login", { ...data })
             if (res.status === 200 ) {
                 toast.success("Authentication successful")
+                console.log(res);
                 reset()
                 router.push('/home')
             } 

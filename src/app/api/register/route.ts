@@ -2,6 +2,7 @@ import { DBconnect } from "@/lib/DBconnect"
 import { ResponseHelper } from "@/lib/responseHelper"
 import { User } from "@/models/User.models"
 import bcrypt  from "bcryptjs"
+import jwt from "jsonwebtoken"
 
 export async function POST(req: Request){
     const { fullName, email, password } = await req.json();
@@ -23,6 +24,11 @@ export async function POST(req: Request){
         const verificationCode = Math.floor(Math.random() * 10000)
         const expiryTime = new Date(Date.now() + 3600000)
 
+        const secret = process.env.TOKEN_SECRET
+        if (!secret) {
+            throw new Error("Token is missing")
+        }
+
         const user = await User.create({
             fullName,
             email,
@@ -33,6 +39,21 @@ export async function POST(req: Request){
         if (!user) {
             return ResponseHelper.error(`Failed to register`, 405)
         }
+
+        const token = jwt.sign(
+            {
+                id: user._id,
+                password: user.password
+            },
+            secret,
+            {
+                expiresIn: process.env.TOKEN_EXPIRY
+            }
+        )
+        if (!token) throw new Error("Fialed to generate token")
+
+        user.token = token;
+        await user.save();
 
         const createdUser = await User.findById(user._id).select(
             "-password -token -verificationCode -codeExpiry -__v"
