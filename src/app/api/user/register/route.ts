@@ -54,9 +54,6 @@ export async function POST(req: Request){
             return ResponseHelper.error(`Failed to register`, 405)
         }
 
-        user.token = token;
-        await user.save();
-
         const createdUser = await User.findById(user._id).select(
             "-password -token -verificationCode -codeExpiry -__v"
         )

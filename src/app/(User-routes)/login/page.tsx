@@ -1,7 +1,6 @@
 'use client'
 import Image from "next/image"
 import background from '@/images/background.jpg'
-import { ArrowUpRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -16,10 +15,12 @@ export default function Page(){
 
     const onSubmit = async (data: object) => {
         try {
-            const res = await axios.post("/api/login", { ...data })
+            const res = await axios.post("/api/user/login", { ...data })
             if (res.status === 200 ) {
                 toast.success("Authentication successful")
-                console.log(res);
+                sessionStorage.setItem("userId", res.data.data._id)
+                sessionStorage.setItem('fullName', res.data.data.fullName )
+                sessionStorage.setItem('isVerified', res.data.data.isVerified)
                 reset()
                 router.push('/home')
             } 
@@ -38,8 +39,7 @@ export default function Page(){
         <main>  
         <div className="w-full h-screen flex " >
             <div className="w-1/2 h-full ">
-                <h1 className="absolute p-10 font-semibold text-xl" >ACADEMA Inc</h1>
-                <a href="mailto:mailzeni42@gmial.com" className="absolute bottom-0 p-10 flex justify-center items-center underline"> contact <ArrowUpRight size={20} /> </a>
+                <h1 className="absolute p-10 font-semibold text-xl" >Learnify</h1>
                 <Image alt="background" src={background} className="w-full h-full object-cover rounded-r-lg"/>
             </div>
             <div className="w-1/2 h-full p-10">
@@ -55,7 +55,7 @@ export default function Page(){
                         <Input {...register("email", {required: true})} autoComplete="off" className="w-full h-14 px-7" type="email" placeholder="Email" />
                         <Input {...register("password", {required: true})} autoComplete="off" className="w-full h-14 px-7" type="password" placeholder="Password" />
                         <Button type="submit" className="w-full h-12 text-white hover:text-white bg-orange-500 hover:bg-orange-600" > Submit </Button>
-                        <div className="text-zinc-500" >By logging in you agress to our <Link className='underline' href={'#'} >Privacy policy</Link></div>
+                        <div className="text-zinc-500" >By logging in you agree to our <Link className='underline' href={'#'} >Privacy policy</Link></div>
                     </div>
                 </form>
             </div>

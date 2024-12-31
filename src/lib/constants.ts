@@ -1,1 +1,1 @@
-export const MONGODBNAME = 'Demon'
+export const MONGODBNAME = 'Learnify'

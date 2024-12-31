@@ -7,7 +7,6 @@ export interface userInterface extends Document {
     email: string;
     password: string;
     avatar: string;
-    isInstructor: boolean
     verificationCode: number;
     isVerified: boolean
     codeExpiry: Date;
@@ -37,11 +36,6 @@ export const userSchema: Schema<userInterface> = new mongoose.Schema({
     },
     avatar: {
         type: String,
-    },
-    isInstructor:{
-        type: Boolean,
-        required: true,
-        default: false
     },
     verificationCode:{
         type: Number,

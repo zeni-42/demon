@@ -6,9 +6,13 @@ export async function verifyToken(email: string): Promise<boolean> {
     await DBconnect();
     const cookieStore = await cookies()
     const token = cookieStore.get('token')
+    if (!token) {
+        return false
+    }
+    const optionalTokenValue = token?.value
 
-    const user = await User.findOne({ email })
-    if (user?.token !== token) {
+    const user = await User.findOne({ email, token: optionalTokenValue })
+    if (!user) {
         return false
     }
     return true

@@ -1,9 +1,7 @@
 import { DBconnect } from "@/lib/DBconnect"
 import { ResponseHelper } from "@/lib/responseHelper"
-import { verifyToken } from "@/lib/verifyToken";
 import { User } from "@/models/User.models";
 import bcrypt from 'bcryptjs'
-import jwt from "jsonwebtoken"
 import { cookies } from "next/headers";
 
 export async function POST(req: Request) {
@@ -14,15 +12,6 @@ export async function POST(req: Request) {
 
     try {
         await DBconnect();
-
-        const directAccess = await verifyToken(email)
-        if (directAccess) {
-            const directUser = await User.findOne({ email }).select(
-                "-password -token -verificationCode -codeExpiry -__v"
-            )
-
-            return ResponseHelper.success(directUser, "User logged in ( Cookie )", 200)
-        }
 
         const user = await User.findOne({ email })
         if (!user) {
@@ -46,7 +35,7 @@ export async function POST(req: Request) {
             maxAge: 172800 // 2days
         })
 
-        return ResponseHelper.success(loggedInUser, 'User loggedIn', 200)
+        return ResponseHelper.success(loggedInUser, 'User logged in', 200)
     } catch (error) {
         console.log(`Somthing went wrong in the login route`);
         return ResponseHelper.error(`Intrnal server error`, 500, error)

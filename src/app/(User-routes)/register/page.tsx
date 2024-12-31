@@ -14,7 +14,7 @@ export default function Page(){
 
     const onSubmit = async (data: object) => {
         try {
-            const res = await axios.post("/api/register", { ...data })
+            const res = await axios.post("/api/user/register", { ...data })
             if (res.status === 200 ) {
                 console.log(res);
                 toast.success("User registed")
@@ -35,7 +35,7 @@ export default function Page(){
         <main>  
         <div className="w-full h-screen flex " >
             <div className="w-1/2 h-full ">
-                <h1 className="absolute p-10 font-semibold text-xl" >ACADEMA Inc</h1>
+                <h1 className="absolute p-10 font-semibold text-xl" >Learnify</h1>
                 <a href="mailto:mailzeni42@gmial.com" className="absolute bottom-0 p-10 flex justify-center items-center underline"> contact <ArrowUpRight size={20} /> </a>
                 <Image alt="background" src={background} className="w-full h-full object-cover rounded-r-lg"/>
             </div>
