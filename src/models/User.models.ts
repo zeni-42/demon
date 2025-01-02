@@ -10,6 +10,9 @@ export interface userInterface extends Document {
     verificationCode: number;
     isVerified: boolean
     codeExpiry: Date;
+    age: number,
+    isInstructor: boolean,
+    isPremiumUser: boolean,
     token: string;
     courses: ObjectId[],
 }
@@ -44,6 +47,20 @@ export const userSchema: Schema<userInterface> = new mongoose.Schema({
     codeExpiry:{
         type: Date,
         required: true,
+    },
+    age: {
+        type: Number,
+        index: true
+    },
+    isInstructor:{
+        type: Boolean,
+        required: true,
+        default: false
+    },
+    isPremiumUser:{
+        type: Boolean,
+        required: true,
+        default: false
     },
     courses: [
         {

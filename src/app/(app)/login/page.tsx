@@ -18,11 +18,17 @@ export default function Page(){
             const res = await axios.post("/api/user/login", { ...data })
             if (res.status === 200 ) {
                 toast.success("Authentication successful")
+                const isInstructor = res.data.data.isInstructor
+                if (isInstructor) {
+                    router.push('/instructor/home')
+                } else {
+                    router.push('/user/home')
+                }
+                sessionStorage.setItem("isInstructor", isInstructor)
                 sessionStorage.setItem("userId", res.data.data._id)
                 sessionStorage.setItem('fullName', res.data.data.fullName )
                 sessionStorage.setItem('isVerified', res.data.data.isVerified)
                 reset()
-                router.push('/home')
             } 
             else {
                 console.log(res);

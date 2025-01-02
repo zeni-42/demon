@@ -17,7 +17,7 @@ export default function Page(){
         <h3 className="text-zinc-600" >~ with Learnify</h3>
       </motion.div>
       <div className="flex gap-10" >
-        <Link className="w-40 bg-zinc-800 h-12 rounded-lg flex justify-center items-center" href={'/home'} >Explore more </Link>
+        <Link className="w-40 bg-zinc-800 h-12 rounded-lg flex justify-center items-center" href={'/'} >Explore more </Link>
         <Link className="w-40 bg-zinc-100 h-12 rounded-lg text-zinc-900 flex justify-center items-center" href={'/register'}>Register</Link>
       </div>
     </div>

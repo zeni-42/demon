@@ -3,24 +3,36 @@ import mongoose, { Document, ObjectId, Schema } from "mongoose";
 
 // interface declaration
 export interface videoInterface extends Document {
-    filename: string;
+    title: string;
     duration: number;
+    description: string;
+    isPrivate: boolean;
     uploadedBy: ObjectId;
     belongsTo: ObjectId
 }
 
 // Schema Declaration
 export const videoSchema:Schema<videoInterface> = new mongoose.Schema({
-    filename:{
+    title:{
         type: String,
         required: true,
         index: true,
         unique: true
     },
+    description:{
+        type: String,
+        required: true,
+        max: 200
+    },
     duration:{
         type: Number,
         required: true,
         index: true
+    },
+    isPrivate:{
+        type: Boolean,
+        required: true,
+        default: false
     },
     uploadedBy:{
         type: mongoose.Schema.Types.ObjectId,

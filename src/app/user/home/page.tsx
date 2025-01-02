@@ -21,12 +21,12 @@ export default function Page(){
         <>
         <Navbar />
         {
-            isVerified ? (
-                <div className="mt-14" ></div>
-            ):(
+            isVerified === 'true' ? (
                 <>
-                <Popup />
+                    <div className="mt-14" ></div>
                 </>
+            ) : (
+                <Popup />
             )
         }
         </>
